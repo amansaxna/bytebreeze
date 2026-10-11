@@ -1,0 +1,54 @@
+name: Daily Intelligence Pipeline
+
+on:
+  schedule:
+    # 8:30 AM IST is 03:00 UTC (8:30 - 5:30 = 03:00)
+    - cron: '0 3 * * *'
+  workflow_dispatch: # Allows manual trigger from GitHub Actions tab
+  push:
+    branches:
+      - main
+    paths:
+      - 'pipeline/**'
+      - '.github/workflows/daily_briefing.yml'
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  build-and-sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run ByteBreeze pipeline
+        run: |
+          python pipeline/build.py
+
+      - name: Commit and push updated briefing data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/
+          if git diff --staged --quiet; then
+            echo "No new updates in Google Docs today."
+          else
+            git commit -m "chore: sync daily briefing data [$(date -u +'%Y-%m-%d %H:%M UTC')]"
+            git push origin main
+          fi

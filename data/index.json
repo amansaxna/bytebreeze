@@ -1,0 +1,86 @@
+{
+  "generated_at": "2026-10-11T16:47:11.324530+00:00",
+  "chapters": {
+    "ai": {
+      "name": "AI Engineering Digest",
+      "tagline": "High-signal daily intelligence for software engineers leveling up in AI/ML systems",
+      "icon": "🤖",
+      "latest_date": "October 11, 2026",
+      "latest_file": "data/ai/latest.json",
+      "editions": [
+        {
+          "id": "october-11--2026",
+          "title": "🤖 Daily AI Engineering Digest — October 11, 2026",
+          "date": "October 11, 2026",
+          "topics_count": 8,
+          "file": "data/ai/editions/october-11--2026.json"
+        },
+        {
+          "id": "october-11--2026",
+          "title": "🤖 Daily AI Engineering Digest — October 11, 2026",
+          "date": "October 11, 2026",
+          "topics_count": 8,
+          "file": "data/ai/editions/october-11--2026.json"
+        }
+      ]
+    },
+    "cyber": {
+      "name": "Cybersecurity & Threat Intelligence",
+      "tagline": "Daily zero-days, runtime reachability, kernel exploits & threat actor breakdowns",
+      "icon": "🛡️",
+      "latest_date": "2026-09-30",
+      "latest_file": "data/cyber/latest.json",
+      "editions": [
+        {
+          "id": "2026-09-30",
+          "title": "🛡️ Daily Cybersecurity Engineering & Threat Intelligence — 2026-09-30",
+          "date": "2026-09-30",
+          "topics_count": 5,
+          "file": "data/cyber/editions/2026-09-30.json"
+        },
+        {
+          "id": "2026-09-29",
+          "title": "🛡️ Daily Cybersecurity Engineering & Threat Intelligence — 2026-09-29",
+          "date": "2026-09-29",
+          "topics_count": 5,
+          "file": "data/cyber/editions/2026-09-29.json"
+        },
+        {
+          "id": "2026-09-27",
+          "title": "🛡️ Daily Cybersecurity Engineering & Threat Intelligence — 2026-09-27",
+          "date": "2026-09-27",
+          "topics_count": 5,
+          "file": "data/cyber/editions/2026-09-27.json"
+        },
+        {
+          "id": "2026-09-25",
+          "title": "🛡️ Daily Cybersecurity Engineering & Threat Intelligence — 2026-09-25",
+          "date": "2026-09-25",
+          "topics_count": 5,
+          "file": "data/cyber/editions/2026-09-25.json"
+        },
+        {
+          "id": "2026-09-21",
+          "title": "🛡️ Daily Cybersecurity Engineering & Threat Intelligence — 2026-09-21",
+          "date": "2026-09-21",
+          "topics_count": 5,
+          "file": "data/cyber/editions/2026-09-21.json"
+        },
+        {
+          "id": "2026-09-20",
+          "title": "🛡️ Daily Cybersecurity Engineering & Threat Intelligence — 2026-09-20",
+          "date": "2026-09-20",
+          "topics_count": 5,
+          "file": "data/cyber/editions/2026-09-20.json"
+        },
+        {
+          "id": "2026-09-17",
+          "title": "🛡️ Daily Cybersecurity Engineering & Threat Intelligence — 2026-09-17",
+          "date": "2026-09-17",
+          "topics_count": 5,
+          "file": "data/cyber/editions/2026-09-17.json"
+        }
+      ]
+    }
+  }
+}
