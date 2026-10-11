@@ -92,7 +92,7 @@ Then visit `http://localhost:8000`.
 
 ## 🌐 Deploying to GitHub Pages
 
-1. Push this repository to GitHub:
+1. Push this repository to GitHub / GitLab:
    ```bash
    git add .
    git commit -m "feat: initial bytebreeze release"
@@ -105,3 +105,13 @@ Then visit `http://localhost:8000`.
    - Click **Save**.
 3. Your site will be live at `https://amansaxna.github.io/bytebreeze/`!
 4. The daily pipeline (`daily_briefing.yml`) will automatically run every morning at 8:30 AM IST, fetch the latest additions from both Google Docs, and update the site. You can also trigger it manually anytime under the **Actions** tab by selecting **Daily Intelligence Pipeline** and clicking **Run workflow**.
+
+---
+
+## 🦊 Deploying to GitLab Pages & GitLab CI
+
+If hosting on GitLab:
+1. `.gitlab-ci.yml` is already configured for:
+   - **Daily scheduled pipelines**: Go to **Build** → **Pipeline schedules** in GitLab and create a cron schedule for `0 3 * * *` (8:30 AM IST).
+   - **GitLab Pages deployment**: The `pages` job automatically copies static assets to `public/` and deploys your site at `https://<username>.gitlab.io/bytebreeze`.
+2. To allow automated commits back to the GitLab repository on scheduled runs, add a Project Access Token with `write_repository` permission as a CI/CD variable named `GITLAB_TOKEN`.

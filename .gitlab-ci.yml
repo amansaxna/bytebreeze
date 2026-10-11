@@ -1,0 +1,61 @@
+image: python:3.11-slim
+
+stages:
+  - sync
+  - deploy
+
+variables:
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+
+cache:
+  paths:
+    - .cache/pip
+
+# 1. Sync Job: Runs the intelligence pipeline to fetch Google Docs & generate data
+sync-daily-intel:
+  stage: sync
+  before_script:
+    - apt-get update && apt-get install -y --no-install-recommends git
+    - pip install --upgrade pip
+    - pip install -r requirements.txt
+  script:
+    - python pipeline/build.py
+    # Optional auto-commit back to repo if running on schedule with access token
+    - |
+      if [ "$CI_PIPELINE_SOURCE" = "schedule" ] && [ -n "$GITLAB_TOKEN" ]; then
+        git config user.name "gitlab-ci[bot]"
+        git config user.email "gitlab-ci[bot]@gitlab.com"
+        git add data/ index.html
+        if git diff --staged --quiet; then
+          echo "No new updates in Google Docs today."
+        else
+          git commit -m "chore: sync daily briefing data [$(date -u +'%Y-%m-%d %H:%M UTC')]"
+          git push "https://oauth2:${GITLAB_TOKEN}@${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git" HEAD:${CI_COMMIT_REF_NAME}
+        fi
+      fi
+  artifacts:
+    paths:
+      - data/
+      - index.html
+      - style.css
+      - app.js
+    expire_in: 1 week
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+    - if: $CI_PIPELINE_SOURCE == "web"
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+# 2. GitLab Pages Job: Serves ByteBreeze on GitLab Pages
+pages:
+  stage: deploy
+  dependencies:
+    - sync-daily-intel
+  script:
+    - mkdir -p public
+    - cp index.html style.css app.js public/
+    - cp -r data public/
+  artifacts:
+    paths:
+      - public
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
