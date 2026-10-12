@@ -149,19 +149,6 @@
       applyTheme(state.theme);
     });
 
-    // Delegated click for deep-dive drawers
-    el.contentArea.addEventListener('click', (e) => {
-      const toggle = e.target.closest('.deep-dive-toggle');
-      if (toggle) {
-        const item = toggle.closest('.intel-item');
-        if (item) {
-          item.classList.toggle('expanded');
-          const isExp = item.classList.contains('expanded');
-          toggle.querySelector('.deep-dive-label').textContent = isExp ? 'Collapse Technical Breakdown' : 'Expand Technical Breakdown';
-        }
-      }
-    });
-
     // Keyboard trigger for accessible video cards
     el.contentArea.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') {
@@ -632,11 +619,7 @@
         </div>
         ${sub.summary ? `<div class="item-summary">${formatInlineLinks(sub.summary)}</div>` : ''}
         ${hasExtraDetails ? `
-          <button class="deep-dive-toggle" type="button" aria-expanded="false">
-            <span class="deep-dive-label">Expand Technical Breakdown</span>
-            <svg class="deep-dive-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
-          </button>
-          <div class="deep-dive-drawer">
+          <div class="item-details-body">
             ${ledgerHtml}
             ${bulletsHtml}
           </div>
