@@ -1,39 +1,40 @@
 :root {
-  /* Core Obsidian Dark Engine */
-  --bg-primary: #07090e;
-  --bg-secondary: #0c0f17;
-  --bg-card: #101522;
-  --bg-card-subtle: #0d121c;
-  --bg-card-hover: #151b2c;
-  --bg-glass: rgba(12, 15, 23, 0.88);
-  --bg-subnav: rgba(7, 9, 14, 0.92);
+  /* Futuristic Obsidian & Espresso Engine (Warm Pitch-Black, Anti-Slop) */
+  --bg-primary: #060504;          /* Deep pitch black with warm espresso root */
+  --bg-secondary: #0d0c0a;        /* Deep smoked carbon */
+  --bg-card: #13120f;             /* Milled obsidian slate with warm bronze undertone */
+  --bg-card-subtle: #0f0e0c;      /* Deep recessed carbon */
+  --bg-card-hover: #1a1815;       /* Warm roasted carbon on hover */
+  --bg-glass: rgba(13, 12, 10, 0.92);
+  --bg-subnav: rgba(6, 5, 4, 0.95);
   
-  --border-dim: rgba(255, 255, 255, 0.05);
-  --border-subtle: rgba(255, 255, 255, 0.09);
-  --border-medium: rgba(255, 255, 255, 0.16);
-  --border-active: rgba(255, 255, 255, 0.28);
+  --border-dim: rgba(255, 245, 225, 0.04);
+  --border-subtle: rgba(255, 245, 225, 0.08);
+  --border-medium: rgba(255, 245, 225, 0.14);
+  --border-active: rgba(255, 245, 225, 0.26);
   
-  --text-primary: #f8fafc;
-  --text-secondary: #cbd5e1;
-  --text-muted: #8492a6;
-  --text-dim: #526075;
+  --text-primary: #f5f2eb;        /* Bone ivory / warm linen white (anti-glare, ultra-crisp) */
+  --text-secondary: #c7c0b5;      /* Warm stone mist */
+  --text-muted: #8a8375;          /* Smoked taupe */
+  --text-dim: #544e43;            /* Deep graphite-earth */
   
-  /* Precision Accents - AI Track */
-  --accent-base: #06b6d4;
-  --accent-hover: #22d3ee;
-  --accent-glow: rgba(6, 182, 212, 0.22);
-  --accent-bg-subtle: rgba(6, 182, 212, 0.08);
-  --accent-border: rgba(6, 182, 212, 0.35);
-  --accent-gradient: linear-gradient(135deg, #06b6d4 0%, #3b82f6 50%, #8b5cf6 100%);
-  --chapter-pill-glow: rgba(6, 182, 212, 0.4);
+  /* Precision Futuristic Accents - AI Track: Phosphor Amber / Burnished Bronze */
+  --accent-base: #f59e0b;         /* Radiant phosphor amber */
+  --accent-hover: #fbbf24;        /* Warm electric gold */
+  --accent-glow: rgba(245, 158, 11, 0.16);
+  --accent-bg-subtle: rgba(245, 158, 11, 0.08);
+  --accent-border: rgba(245, 158, 11, 0.28);
+  --accent-gradient: linear-gradient(135deg, #f59e0b 0%, #d97706 50%, #92400e 100%);
+  --accent-contrast: #060504;     /* Deep black text on amber buttons for maximum contrast */
+  --chapter-pill-glow: rgba(245, 158, 11, 0.35);
 
   /* Track-specific status colors */
   --status-emerald: #10b981;
-  --status-emerald-bg: rgba(16, 185, 129, 0.12);
+  --status-emerald-bg: rgba(16, 185, 129, 0.1);
   --status-amber: #f59e0b;
-  --status-amber-bg: rgba(245, 158, 11, 0.12);
+  --status-amber-bg: rgba(245, 158, 11, 0.1);
   --status-crimson: #ef4444;
-  --status-crimson-bg: rgba(239, 68, 68, 0.14);
+  --status-crimson-bg: rgba(239, 68, 68, 0.12);
 
   /* Geometry & Typography */
   --radius-xs: 4px;
@@ -50,43 +51,46 @@
   --transition-bounce: 400ms cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* Light Theme: Technical Paper / Studio White */
+/* Light Theme: Architectural Warm Vellum / Technical Paper */
 [data-theme="light"] {
-  --bg-primary: #f6f8fb;
+  --bg-primary: #f8f6f0;
   --bg-secondary: #ffffff;
   --bg-card: #ffffff;
-  --bg-card-subtle: #f1f4f9;
-  --bg-card-hover: #f8fafc;
-  --bg-glass: rgba(255, 255, 255, 0.9);
-  --bg-subnav: rgba(246, 248, 251, 0.94);
+  --bg-card-subtle: #f2efe9;
+  --bg-card-hover: #fbf9f4;
+  --bg-glass: rgba(255, 255, 255, 0.92);
+  --bg-subnav: rgba(248, 246, 240, 0.95);
 
-  --border-dim: rgba(0, 0, 0, 0.04);
-  --border-subtle: rgba(0, 0, 0, 0.08);
-  --border-medium: rgba(0, 0, 0, 0.15);
-  --border-active: rgba(0, 0, 0, 0.28);
+  --border-dim: rgba(40, 30, 20, 0.04);
+  --border-subtle: rgba(40, 30, 20, 0.08);
+  --border-medium: rgba(40, 30, 20, 0.15);
+  --border-active: rgba(40, 30, 20, 0.28);
 
-  --text-primary: #0a0e1a;
-  --text-secondary: #334155;
-  --text-muted: #64748b;
-  --text-dim: #94a3b8;
+  --text-primary: #171411;
+  --text-secondary: #3d3730;
+  --text-muted: #6e6459;
+  --text-dim: #9c9184;
 
-  --accent-base: #0284c7;
-  --accent-hover: #0369a1;
-  --accent-glow: rgba(2, 132, 199, 0.15);
-  --accent-bg-subtle: rgba(2, 132, 199, 0.07);
-  --accent-border: rgba(2, 132, 199, 0.3);
-  --chapter-pill-glow: rgba(2, 132, 199, 0.25);
+  --accent-base: #b45309;
+  --accent-hover: #92400e;
+  --accent-glow: rgba(180, 83, 9, 0.14);
+  --accent-bg-subtle: rgba(180, 83, 9, 0.08);
+  --accent-border: rgba(180, 83, 9, 0.3);
+  --accent-gradient: linear-gradient(135deg, #b45309 0%, #78350f 100%);
+  --accent-contrast: #ffffff;
+  --chapter-pill-glow: rgba(180, 83, 9, 0.22);
 }
 
-/* Cybersecurity Track Overrides */
+/* Cybersecurity Track Overrides - Oxide Ember & Smoked Crimson */
 body.cyber-mode {
-  --accent-base: #ef4444;
-  --accent-hover: #f87171;
-  --accent-glow: rgba(239, 68, 68, 0.24);
-  --accent-bg-subtle: rgba(239, 68, 68, 0.08);
-  --accent-border: rgba(239, 68, 68, 0.35);
-  --accent-gradient: linear-gradient(135deg, #ef4444 0%, #f97316 50%, #e11d48 100%);
-  --chapter-pill-glow: rgba(239, 68, 68, 0.45);
+  --accent-base: #f43f5e;
+  --accent-hover: #fb7185;
+  --accent-glow: rgba(244, 63, 94, 0.2);
+  --accent-bg-subtle: rgba(244, 63, 94, 0.08);
+  --accent-border: rgba(244, 63, 94, 0.32);
+  --accent-gradient: linear-gradient(135deg, #f43f5e 0%, #e11d48 50%, #881337 100%);
+  --accent-contrast: #ffffff;
+  --chapter-pill-glow: rgba(244, 63, 94, 0.4);
 }
 
 [data-theme="light"] body.cyber-mode {
@@ -95,6 +99,7 @@ body.cyber-mode {
   --accent-glow: rgba(220, 38, 38, 0.16);
   --accent-bg-subtle: rgba(220, 38, 38, 0.06);
   --accent-border: rgba(220, 38, 38, 0.3);
+  --accent-contrast: #ffffff;
   --chapter-pill-glow: rgba(220, 38, 38, 0.25);
 }
 
@@ -641,10 +646,10 @@ header.site-header {
   align-items: center;
   gap: 0.5rem;
   background: var(--accent-base);
-  color: #ffffff;
+  color: var(--accent-contrast, #060504);
   text-decoration: none;
   font-size: 0.85rem;
-  font-weight: 700;
+  font-weight: 800;
   padding: 0.65rem 1.25rem;
   border-radius: var(--radius-sm);
   white-space: nowrap;
@@ -1010,15 +1015,15 @@ header.site-header {
 }
 
 .tier-t2 .tier-chip {
-  background: rgba(59, 130, 246, 0.12);
-  color: #60a5fa;
-  border: 1px solid rgba(59, 130, 246, 0.3);
+  background: var(--status-amber-bg);
+  color: var(--status-amber);
+  border: 1px solid rgba(245, 158, 11, 0.3);
 }
 
 .tier-t3 .tier-chip {
-  background: rgba(168, 85, 247, 0.12);
-  color: #c084fc;
-  border: 1px solid rgba(168, 85, 247, 0.3);
+  background: rgba(249, 115, 22, 0.12);
+  color: #fb923c;
+  border: 1px solid rgba(249, 115, 22, 0.3);
 }
 
 .tier-text {
