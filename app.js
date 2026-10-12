@@ -185,7 +185,9 @@
             isManualScrolling = true;
             clearTimeout(scrollTimeout);
 
-            const headerOffset = 100;
+            const headerEl = document.querySelector('header.site-header');
+            const subnavEl = document.querySelector('.sticky-subnav-bar');
+            const headerOffset = (headerEl ? headerEl.offsetHeight : 0) + (subnavEl ? subnavEl.offsetHeight : 0) + 8;
             const targetTop = targetEl.getBoundingClientRect().top + window.pageYOffset - headerOffset;
             window.scrollTo({
               top: Math.max(0, targetTop),

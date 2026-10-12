@@ -75,13 +75,13 @@ def render_index_html():
           <select id="edition-select" class="select-edition" aria-label="Select Intelligence Edition"></select>
           <span class="select-arrow">▼</span>
         </div>
-        <button id="btn-copy-md" class="btn-ctrl" title="Copy Semantic Markdown" type="button">
+        <button id="btn-copy-md" class="btn-ctrl" title="Copy Semantic Markdown" type="button" aria-label="Copy Markdown">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-          MD
+          <span class="btn-ctrl-label">MD</span>
         </button>
-        <button id="btn-copy-json" class="btn-ctrl" title="Copy Machine-Readable JSON" type="button">
+        <button id="btn-copy-json" class="btn-ctrl" title="Copy Machine-Readable JSON" type="button" aria-label="Copy Machine-Readable JSON">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
-          JSON
+          <span class="btn-ctrl-label">JSON</span>
         </button>
         <button id="btn-theme" class="btn-ctrl" title="Toggle Theme (Press T)" type="button" aria-label="Toggle Theme">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>

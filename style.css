@@ -49,6 +49,12 @@
   --transition-fast: 160ms cubic-bezier(0.16, 1, 0.3, 1);
   --transition-smooth: 280ms cubic-bezier(0.16, 1, 0.3, 1);
   --transition-bounce: 400ms cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* Responsive Layout Variables */
+  --header-height: 3.2rem;
+  --subnav-top: 3.2rem;
+  --scroll-offset: 6.25rem;
+  --container-pad: 1.5rem;
 }
 
 /* Light Theme: Architectural Warm Vellum / Technical Paper */
@@ -112,7 +118,7 @@ body.cyber-mode {
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 6.25rem;
+  scroll-padding-top: var(--scroll-offset);
   font-size: 16px;
   overflow-x: clip;
 }
@@ -149,7 +155,7 @@ body {
   width: 100%;
   max-width: 1320px;
   margin: 0 auto;
-  padding: 0 1.5rem;
+  padding: 0 var(--container-pad);
   position: relative;
   z-index: 1;
 }
@@ -170,7 +176,7 @@ header.site-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 3.2rem;
+  height: var(--header-height);
   gap: 1.25rem;
 }
 
@@ -361,14 +367,14 @@ header.site-header {
 /* Sticky Subnav Bar (Scrollspy Anchor Dock + Inline Search) */
 .sticky-subnav-bar {
   position: sticky;
-  top: 3.2rem;
+  top: var(--subnav-top);
   z-index: 90;
   background-color: var(--bg-subnav);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--border-subtle);
   padding: 0.25rem 0;
-  transition: background-color var(--transition-fast);
+  transition: background-color var(--transition-fast), top var(--transition-fast);
 }
 
 .subnav-inner {
@@ -699,7 +705,7 @@ header.site-header {
 /* Section Pillars */
 .intel-section {
   margin-bottom: 3.5rem;
-  scroll-margin-top: 8.5rem;
+  scroll-margin-top: var(--scroll-offset);
 }
 
 .section-head {
@@ -1187,16 +1193,6 @@ header.site-header {
   gap: 0.5rem;
 }
 
-@media (max-width: 640px) {
-  .video-item-row {
-    flex-direction: column;
-  }
-  .yt-preview-box {
-    width: 200px;
-    max-width: 100%;
-  }
-}
-
 /* Toast Notice */
 .toast-notice {
   position: fixed;
@@ -1263,49 +1259,424 @@ footer.site-footer {
   color: var(--text-primary);
 }
 
-/* Responsive Rules */
+/* ==========================================================================
+   RESPONSIVE DESIGN SYSTEM (TABLET & MOBILE OPTIMIZATIONS)
+   ========================================================================== */
+
+/* Tablet & Medium Screens (<= 1024px) */
 @media (max-width: 1024px) {
+  :root {
+    --container-pad: 1.25rem;
+  }
+
+  .brand-sub {
+    display: none;
+  }
+
   .subnav-inner {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0.5rem;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.85rem;
   }
+
+  .pillar-dock {
+    flex: 1;
+    min-width: 0;
+  }
+
   .subnav-filter {
-    max-width: 100%;
+    width: 200px;
+    flex-shrink: 0;
   }
-  .sprint-spotlight {
-    grid-template-columns: 1fr;
+
+  .matrix-grid {
+    grid-template-columns: repeat(2, 1fr);
     gap: 1rem;
   }
-  .sprint-badge-cell {
-    width: fit-content;
+
+  .concept-grid {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+    gap: 1rem;
   }
+
   .action-plan-track {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+    gap: 1rem;
   }
+
+  .sprint-spotlight {
+    grid-template-columns: 80px 1fr auto;
+    padding: 1.25rem 1.4rem;
+    gap: 1.25rem;
+  }
+
+  .video-item-row {
+    flex-direction: row;
+    gap: 1.15rem;
+  }
+
+  .yt-preview-box {
+    width: 200px;
+  }
+
+  .spec-ledger {
+    padding: 0.85rem 1.15rem;
+  }
+
   .ledger-entry {
-    grid-template-columns: 1fr;
-    gap: 0.25rem;
+    grid-template-columns: 160px 1fr;
+    gap: 0.75rem;
   }
 }
 
+/* Portrait Tablet & Large Phablet (<= 768px) */
 @media (max-width: 768px) {
-  .header-inner {
-    flex-wrap: wrap;
-    height: auto;
-    padding: 0.75rem 0;
-    gap: 0.75rem;
+  :root {
+    --container-pad: 1rem;
   }
-  .chapter-nav {
-    order: 3;
+
+  .header-actions {
+    gap: 0.35rem;
+  }
+
+  .edition-select-wrap {
+    max-width: 140px;
+  }
+
+  .sprint-spotlight {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    padding: 1.15rem 1.25rem;
+    margin-bottom: 1.75rem;
+  }
+
+  .sprint-badge-cell {
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 0.65rem;
+    width: 100%;
+    padding: 0.45rem 0.75rem;
+  }
+
+  .sprint-time {
+    font-size: 1.2rem;
+  }
+
+  .sprint-unit {
+    margin-top: 0;
+    font-size: 0.68rem;
+  }
+
+  .sprint-action-btn {
     width: 100%;
     justify-content: center;
   }
-  .hero-headline {
-    font-size: 1.75rem;
+
+  .ledger-entry {
+    grid-template-columns: 1fr;
+    gap: 0.2rem;
   }
+
+  .intel-section {
+    margin-bottom: 2.75rem;
+  }
+
+  footer.site-footer {
+    padding: 2.25rem 0;
+    margin-top: 4rem;
+  }
+
+  .footer-layout {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.25rem;
+  }
+
+  .footer-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-left: 0;
+  }
+
+  .footer-nav a {
+    margin-left: 0;
+  }
+}
+
+/* Mobile Devices (<= 640px) */
+@media (max-width: 640px) {
+  :root {
+    --header-height: 5.2rem;
+    --subnav-top: 5.2rem;
+    --scroll-offset: 9.6rem;
+    --container-pad: 0.85rem;
+  }
+
+  html {
+    font-size: 15px;
+  }
+
+  /* Two-row mobile header: Row 1 = Brand + Utility, Row 2 = Full-width Chapter Switch */
+  header.site-header {
+    height: auto;
+  }
+
+  .header-inner {
+    flex-wrap: wrap;
+    height: auto;
+    padding: 0.45rem 0;
+    gap: 0.4rem 0.5rem;
+  }
+
+  .brand {
+    order: 1;
+    flex: 1;
+    min-width: 0;
+    gap: 0.55rem;
+  }
+
+  .brand-glyph {
+    width: 1.95rem;
+    height: 1.95rem;
+    font-size: 1rem;
+  }
+
+  .brand-title {
+    font-size: 1.05rem;
+  }
+
+  .header-actions {
+    order: 2;
+    gap: 0.3rem;
+  }
+
+  .edition-select-wrap {
+    max-width: 105px;
+  }
+
+  .select-edition {
+    font-size: 0.7rem;
+    padding: 0.35rem 1.35rem 0.35rem 0.45rem;
+    height: 32px;
+  }
+
+  .btn-ctrl {
+    padding: 0.35rem 0.5rem;
+    min-height: 32px;
+  }
+
+  .btn-ctrl-label {
+    display: none;
+  }
+
+  .chapter-nav {
+    order: 3;
+    width: 100%;
+    display: flex;
+    margin-top: 0.15rem;
+    padding: 0.2rem;
+  }
+
+  .chapter-btn {
+    flex: 1;
+    justify-content: center;
+    font-size: 0.78rem;
+    padding: 0.38rem 0.5rem;
+    min-height: 34px;
+    gap: 0.35rem;
+  }
+
+  .chapter-btn .icon-svg {
+    width: 0.9rem;
+    height: 0.9rem;
+  }
+
+  /* Sticky subnav bar on mobile */
+  .sticky-subnav-bar {
+    padding: 0.25rem 0;
+  }
+
+  .subnav-inner {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.35rem;
+  }
+
+  .pillar-dock {
+    gap: 0.3rem;
+    padding: 0.15rem 0;
+  }
+
+  .dock-pill {
+    padding: 0.32rem 0.68rem;
+    font-size: 0.74rem;
+    min-height: 30px;
+  }
+
+  .subnav-filter {
+    width: 100%;
+  }
+
+  .subnav-search-field {
+    padding: 0.32rem 1.8rem 0.32rem 1.8rem;
+    font-size: 0.8rem;
+    height: 32px;
+  }
+
+  /* Hero Hub */
+  .hero-hub {
+    padding: 1.15rem 0 0.95rem;
+  }
+
+  .hero-headline {
+    font-size: 1.25rem;
+    margin-bottom: 0.3rem;
+  }
+
+  .hero-subtitle {
+    font-size: 0.82rem;
+    line-height: 1.5;
+    margin-bottom: 1.15rem;
+  }
+
+  /* 5-Minute Briefing Matrix */
   .matrix-grid {
     grid-template-columns: 1fr;
+    gap: 0.6rem;
+  }
+
+  .matrix-card {
+    padding: 0.75rem 0.85rem;
+    gap: 0.65rem;
+  }
+
+  .matrix-text {
+    font-size: 0.84rem;
+    line-height: 1.45;
+  }
+
+  /* Intelligence Cards */
+  .cards-matrix {
+    gap: 1rem;
+  }
+
+  .intel-item {
+    padding: 1rem 0.95rem;
+    gap: 0.75rem;
+    border-radius: var(--radius-sm);
+  }
+
+  .item-top-row {
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .item-title {
+    font-size: 0.98rem;
+  }
+
+  .item-summary {
+    font-size: 0.86rem;
+    line-height: 1.5;
+  }
+
+  .item-bullets {
+    padding-left: 1rem;
+    font-size: 0.84rem;
+    gap: 0.4rem;
+  }
+
+  /* Full-width Video Preview Box on Mobile */
+  .video-item-row {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .yt-preview-box {
+    width: 100%;
+    min-width: 100%;
+    max-width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: var(--radius-xs);
+  }
+
+  .video-item-body {
+    width: 100%;
+  }
+
+  /* Concept of the Day (3-Tier) & Learning Plan on Mobile */
+  .concept-grid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .concept-tier-card {
+    padding: 0.85rem;
+    gap: 0.55rem;
+  }
+
+  .tier-text {
+    font-size: 0.84rem;
+    line-height: 1.5;
+  }
+
+  .action-plan-track {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .action-step-card {
+    padding: 0.85rem;
+    gap: 0.5rem;
+  }
+
+  /* Spec Ledger Table */
+  .spec-ledger {
+    padding: 0.75rem 0.85rem;
+    gap: 0.45rem;
+  }
+
+  .ledger-key {
+    font-size: 0.72rem;
+  }
+
+  .ledger-val {
+    font-size: 0.84rem;
+    line-height: 1.45;
+    overflow-wrap: anywhere;
+  }
+
+  /* Centered Mobile Toast */
+  .toast-notice {
+    left: 1rem;
+    right: 1rem;
+    bottom: 1rem;
+    padding: 0.65rem 1rem;
+    font-size: 0.8rem;
+    text-align: center;
+    transform: translateY(100px);
+  }
+}
+
+/* Touch Device Ergonomics (Pointer Coarse) */
+@media (hover: none) and (pointer: coarse) {
+  .nav-shortcut,
+  .search-key-badge,
+  .footer-kbd {
+    display: none !important;
+  }
+
+  .dock-pill:active,
+  .chapter-btn:active,
+  .btn-ctrl:active,
+  .sprint-action-btn:active,
+  .matrix-card:active {
+    transform: scale(0.97);
+  }
+
+  * {
+    -webkit-tap-highlight-color: transparent;
   }
 }
 
