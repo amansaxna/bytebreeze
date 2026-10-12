@@ -8,7 +8,8 @@
     indexData: null,
     currentEditionData: null,
     searchQuery: '',
-    theme: localStorage.getItem('bb-theme') || 'dark'
+    theme: localStorage.getItem('bb-theme') || 'dark',
+    activeTopicId: null
   };
 
   // DOM Elements
@@ -25,6 +26,7 @@
     heroDesc: document.getElementById('hero-desc'),
     badgeDate: document.getElementById('badge-date'),
     badgeAudience: document.getElementById('badge-audience'),
+    readtimeVal: document.getElementById('readtime-val'),
     prioritySprint: document.getElementById('priority-sprint'),
     briefingList: document.getElementById('briefing-list'),
     briefingBox: document.getElementById('briefing-box'),
@@ -39,6 +41,7 @@
     applyTheme(state.theme);
     readUrlParams();
     setupEventListeners();
+    setupKeyboardShortcuts();
 
     // 1. Load initial embedded data if present
     try {
@@ -67,6 +70,7 @@
 
     updateEditionDropdown();
     await loadEdition();
+    setupScrollSpy();
   }
 
   function readUrlParams() {
@@ -120,6 +124,50 @@
       state.theme = state.theme === 'dark' ? 'light' : 'dark';
       localStorage.setItem('bb-theme', state.theme);
       applyTheme(state.theme);
+    });
+
+    // Delegated click for deep-dive drawers
+    el.contentArea.addEventListener('click', (e) => {
+      const toggle = e.target.closest('.deep-dive-toggle');
+      if (toggle) {
+        const item = toggle.closest('.intel-item');
+        if (item) {
+          item.classList.toggle('expanded');
+          const isExp = item.classList.contains('expanded');
+          toggle.querySelector('.deep-dive-label').textContent = isExp ? 'Collapse Technical Breakdown' : 'Expand Technical Breakdown';
+        }
+      }
+    });
+  }
+
+  function setupKeyboardShortcuts() {
+    window.addEventListener('keydown', (e) => {
+      // Ignore if user is already typing in an input
+      const tag = document.activeElement ? document.activeElement.tagName.toLowerCase() : '';
+      if (tag === 'input' || tag === 'textarea' || tag === 'select') {
+        if (e.key === 'Escape') {
+          document.activeElement.blur();
+          state.searchQuery = '';
+          el.searchInput.value = '';
+          renderContent();
+        }
+        return;
+      }
+
+      if (e.key === '/' || e.key === 's') {
+        e.preventDefault();
+        el.searchInput.focus();
+        el.searchInput.select();
+      } else if (e.key === '1') {
+        e.preventDefault();
+        switchChapter('ai');
+      } else if (e.key === '2') {
+        e.preventDefault();
+        switchChapter('cyber');
+      } else if (e.key.toLowerCase() === 't') {
+        e.preventDefault();
+        el.btnTheme.click();
+      }
     });
   }
 
@@ -200,6 +248,13 @@
     el.badgeDate.textContent = meta.date || 'Today';
     el.badgeAudience.textContent = meta.target_audience || 'Systems Engineers';
 
+    // Calculate dynamic reading time
+    const rawWordCount = JSON.stringify(data).split(/\s+/).length;
+    const minutes = Math.max(4, Math.round(rawWordCount / 260));
+    if (el.readtimeVal) {
+      el.readtimeVal.textContent = `${minutes} MIN READ`;
+    }
+
     if (state.indexData.generated_at) {
       const d = new Date(state.indexData.generated_at);
       el.lastSyncedTime.textContent = d.toLocaleDateString(undefined, {
@@ -254,14 +309,15 @@
 
     // Render Topics & Cards
     renderContent();
+    setupScrollSpy();
   }
 
   function renderPillarNav(topics) {
-    el.pillarNav.innerHTML = topics.map(t => {
-      // Clean display label
+    el.pillarNav.innerHTML = topics.map((t, i) => {
       const cleanLabel = t.topic_title.replace(/^[0-9\.\s]+/, '').replace(/^[\uD800-\uDBFF\uDC00-\uDFFF\u2600-\u27BF]+\s*/, '');
+      const activeClass = i === 0 ? 'active' : '';
       return `
-        <a href="#${t.topic_id}" class="dock-pill">
+        <a href="#${t.topic_id}" class="dock-pill ${activeClass}" data-target="${t.topic_id}">
           <span>${escapeHtml(cleanLabel)}</span>
         </a>
       `;
@@ -302,7 +358,7 @@
 
     if (!html && query) {
       html = `<div style="text-align: center; padding: 5rem 1rem; color: var(--text-muted); font-family: var(--font-mono);">
-        No intelligence records matching "<strong>${escapeHtml(query)}</strong>".
+        No intelligence records matching "<strong>${escapeHtml(query)}</strong>". Press <kbd class="footer-kbd">Esc</kbd> to clear.
       </div>`;
     }
 
@@ -377,6 +433,8 @@
       `;
     }
 
+    const hasExtraDetails = ledgerHtml || bulletsHtml;
+
     return `
       <article class="intel-item">
         <div class="item-top-row">
@@ -384,8 +442,16 @@
           <div>${badgeHtml}</div>
         </div>
         ${sub.summary ? `<div class="item-summary">${formatInlineLinks(sub.summary)}</div>` : ''}
-        ${ledgerHtml}
-        ${bulletsHtml}
+        ${hasExtraDetails ? `
+          <button class="deep-dive-toggle" type="button" aria-expanded="false">
+            <span class="deep-dive-label">Expand Technical Breakdown</span>
+            <svg class="deep-dive-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          <div class="deep-dive-drawer">
+            ${ledgerHtml}
+            ${bulletsHtml}
+          </div>
+        ` : ''}
       </article>
     `;
   }
@@ -447,6 +513,32 @@
         </div>
       </article>
     `;
+  }
+
+  // ScrollSpy with IntersectionObserver
+  function setupScrollSpy() {
+    const sections = document.querySelectorAll('.intel-section');
+    if (!sections.length) return;
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const id = entry.target.id;
+          document.querySelectorAll('.dock-pill').forEach(pill => {
+            if (pill.getAttribute('data-target') === id) {
+              pill.classList.add('active');
+              pill.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+            } else {
+              pill.classList.remove('active');
+            }
+          });
+        }
+      });
+    }, {
+      rootMargin: '-20% 0px -65% 0px'
+    });
+
+    sections.forEach(sec => observer.observe(sec));
   }
 
   function showToast(msg) {

@@ -53,17 +53,19 @@ def render_index_html():
 
       <!-- Chapter Segmented Control -->
       <nav class="chapter-nav" aria-label="Intelligence Chapters">
-        <button id="tab-ai" class="chapter-btn active" type="button">
+        <button id="tab-ai" class="chapter-btn active" type="button" title="Switch to AI Systems (Press 1)">
           <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M12 2a4 4 0 0 1 4 4v1a4 4 0 0 1-8 0V6a4 4 0 0 1 4-4zM6 14a6 6 0 0 1 12 0v2H6v-2zM4 22h16"></path>
           </svg>
           AI Systems
+          <kbd class="nav-shortcut">1</kbd>
         </button>
-        <button id="tab-cyber" class="chapter-btn" type="button">
+        <button id="tab-cyber" class="chapter-btn" type="button" title="Switch to Cybersecurity (Press 2)">
           <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
           </svg>
           Cybersecurity Intel
+          <kbd class="nav-shortcut">2</kbd>
         </button>
       </nav>
 
@@ -81,12 +83,32 @@ def render_index_html():
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
           JSON
         </button>
-        <button id="btn-theme" class="btn-ctrl" title="Toggle Theme" type="button" aria-label="Toggle Theme">
+        <button id="btn-theme" class="btn-ctrl" title="Toggle Theme (Press T)" type="button" aria-label="Toggle Theme">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
         </button>
       </div>
     </div>
   </header>
+
+  <!-- Sticky Pillar Navigation Bar (Scrollspy Subheader) -->
+  <div class="sticky-subnav-bar">
+    <div class="container subnav-inner">
+      <nav id="pillar-nav" class="pillar-dock" aria-label="Core Pillars Navigation"></nav>
+      <div class="subnav-filter">
+        <span class="subnav-search-icon">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </span>
+        <input 
+          id="search-input" 
+          type="search" 
+          class="subnav-search-field" 
+          placeholder="Filter topics, CVEs, tools..."
+          aria-label="Filter intelligence records"
+        >
+        <kbd class="search-key-badge" title="Focus search">/</kbd>
+      </div>
+    </div>
+  </div>
 
   <!-- Main Intelligence Surface -->
   <main class="container">
@@ -99,6 +121,10 @@ def render_index_html():
           PIPELINE SYNCED
         </span>
         <span id="badge-date" class="meta-chip">Loading...</span>
+        <span id="badge-readtime" class="meta-chip meta-chip-readtime">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"></polyline></svg>
+          <span id="readtime-val">6 MIN READ</span>
+        </span>
         <span id="badge-audience" class="meta-chip">Systems Engineers</span>
       </div>
 
@@ -120,23 +146,6 @@ def render_index_html():
         </div>
         <ul id="briefing-list" class="matrix-grid"></ul>
       </div>
-
-      <!-- Pillar Quick Navigation Dock -->
-      <nav id="pillar-nav" class="pillar-dock" aria-label="Core Pillars Navigation"></nav>
-
-      <!-- Real-Time Filter Hub -->
-      <div class="filter-hub">
-        <span class="search-icon-slot">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        </span>
-        <input 
-          id="search-input" 
-          type="search" 
-          class="search-field" 
-          placeholder="Filter breakthroughs, CVEs, GitHub repositories, systems concepts, or authors..."
-          aria-label="Filter intelligence records"
-        >
-      </div>
     </section>
 
     <!-- Content Pillars -->
@@ -149,7 +158,7 @@ def render_index_html():
       <div>
         <strong>ByteBreeze</strong> — Autonomous Intelligence Pipeline. Synchronized daily at 8:30 AM IST.
         <div style="font-size: 0.76rem; margin-top: 0.35rem; font-family: var(--font-mono); color: var(--text-dim);">
-          Latest data sync: <span id="last-synced-time">Active</span>
+          Latest data sync: <span id="last-synced-time">Active</span> • Press <kbd class="footer-kbd">/</kbd> to search, <kbd class="footer-kbd">1</kbd>/<kbd class="footer-kbd">2</kbd> to switch track
         </div>
       </div>
       <nav class="footer-nav">
