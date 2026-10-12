@@ -107,7 +107,7 @@ body.cyber-mode {
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 8.5rem;
+  scroll-padding-top: 7.25rem;
   font-size: 16px;
   overflow-x: clip;
 }
@@ -165,7 +165,7 @@ header.site-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 4.25rem;
+  height: 3.6rem;
   gap: 1.25rem;
 }
 
@@ -356,13 +356,13 @@ header.site-header {
 /* Sticky Subnav Bar (Scrollspy Anchor Dock + Inline Search) */
 .sticky-subnav-bar {
   position: sticky;
-  top: 4.25rem;
+  top: 3.6rem;
   z-index: 90;
   background-color: var(--bg-subnav);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--border-subtle);
-  padding: 0.5rem 0;
+  padding: 0.35rem 0;
   transition: background-color var(--transition-fast);
 }
 
@@ -379,6 +379,9 @@ header.site-header {
   overflow-x: auto;
   scrollbar-width: none;
   flex-grow: 1;
+  padding: 0.1rem 0;
+  mask-image: linear-gradient(to right, transparent, black 12px, black calc(100% - 24px), transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 12px, black calc(100% - 24px), transparent 100%);
 }
 
 .pillar-dock::-webkit-scrollbar {
@@ -1065,15 +1068,25 @@ header.site-header {
   font-weight: 600;
 }
 
-/* YouTube Intelligence Video Preview Card */
+/* Compact YouTube Video Intelligence Layout */
+.video-item-row {
+  display: flex;
+  gap: 1.25rem;
+  align-items: flex-start;
+  margin: 0.65rem 0 0.5rem 0;
+}
+
 .yt-preview-box {
-  margin: 0.85rem 0 0.5rem 0;
+  width: 220px;
+  min-width: 180px;
+  max-width: 230px;
+  flex-shrink: 0;
   border-radius: var(--radius-sm);
   overflow: hidden;
   border: 1px solid var(--border-medium);
   background: #000000;
   position: relative;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
 }
 
 .yt-thumb-frame {
@@ -1102,14 +1115,14 @@ header.site-header {
 }
 
 .yt-thumb-frame:hover .yt-thumb-img {
-  transform: scale(1.025);
+  transform: scale(1.03);
   opacity: 0.92;
 }
 
 .yt-thumb-gradient {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.6) 100%);
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.08) 0%, rgba(0, 0, 0, 0.58) 100%);
   pointer-events: none;
 }
 
@@ -1118,8 +1131,8 @@ header.site-header {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 56px;
-  height: 56px;
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
   background: rgba(15, 23, 42, 0.85);
   backdrop-filter: blur(8px);
@@ -1130,31 +1143,33 @@ header.site-header {
   justify-content: center;
   color: #ffffff;
   transition: all var(--transition-bounce);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.55);
   z-index: 2;
 }
 
 .yt-thumb-frame:hover .yt-play-btn {
-  transform: translate(-50%, -50%) scale(1.1);
+  transform: translate(-50%, -50%) scale(1.12);
   background: #ff0000;
   border-color: #ff4d4d;
-  box-shadow: 0 10px 30px rgba(255, 0, 0, 0.5);
+  box-shadow: 0 8px 22px rgba(255, 0, 0, 0.5);
 }
 
 .yt-play-btn svg {
   margin-left: 2px;
+  width: 15px;
+  height: 15px;
   fill: currentColor;
 }
 
 .yt-video-badge-bar {
   position: absolute;
-  bottom: 0.65rem;
-  left: 0.65rem;
-  right: 0.65rem;
+  bottom: 0.35rem;
+  left: 0.35rem;
+  right: 0.35rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.5rem;
+  gap: 0.3rem;
   z-index: 3;
   pointer-events: none;
 }
@@ -1162,14 +1177,14 @@ header.site-header {
 .yt-pill-tag {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.3rem;
   background: rgba(0, 0, 0, 0.78);
   backdrop-filter: blur(6px);
   border: 1px solid rgba(255, 255, 255, 0.15);
-  padding: 0.22rem 0.55rem;
+  padding: 0.15rem 0.45rem;
   border-radius: var(--radius-xs);
   font-family: var(--font-mono);
-  font-size: 0.72rem;
+  font-size: 0.65rem;
   font-weight: 600;
   color: #f8fafc;
   letter-spacing: 0.02em;
@@ -1186,6 +1201,24 @@ header.site-header {
   border: none;
   display: block;
   background: #000;
+}
+
+.video-item-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+@media (max-width: 640px) {
+  .video-item-row {
+    flex-direction: column;
+  }
+  .yt-preview-box {
+    width: 200px;
+    max-width: 100%;
+  }
 }
 
 /* Toast Notice */

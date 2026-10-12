@@ -72,7 +72,23 @@
     }
 
     updateEditionDropdown();
-    await loadEdition();
+    
+    let targetFile = null;
+    if (state.requestedDate) {
+      const chapterConfig = state.indexData.chapters[state.chapter];
+      const reqClean = state.requestedDate.toLowerCase().replace(/[^a-z0-9]/g, '');
+      const match = chapterConfig.editions.find(ed => {
+        const edDateClean = ed.date.toLowerCase().replace(/[^a-z0-9]/g, '');
+        const edFileClean = ed.file.toLowerCase().replace(/[^a-z0-9]/g, '');
+        return edDateClean.includes(reqClean) || edFileClean.includes(reqClean) || reqClean.includes(edDateClean);
+      });
+      if (match) {
+        targetFile = match.file;
+        el.editionSelect.value = match.file;
+      }
+    }
+
+    await loadEdition(targetFile);
     setupScrollSpy();
   }
 
@@ -81,6 +97,10 @@
     const ch = params.get('chapter');
     if (ch === 'cyber' || ch === 'ai') {
       state.chapter = ch;
+    }
+    const d = params.get('date');
+    if (d) {
+      state.requestedDate = d;
     }
   }
 
@@ -165,7 +185,7 @@
             isManualScrolling = true;
             clearTimeout(scrollTimeout);
 
-            const headerOffset = 135;
+            const headerOffset = 115;
             const targetTop = targetEl.getBoundingClientRect().top + window.pageYOffset - headerOffset;
             window.scrollTo({
               top: Math.max(0, targetTop),
@@ -263,6 +283,9 @@
   async function loadEdition(fileUrl = null) {
     const chapterConfig = state.indexData.chapters[state.chapter];
     const targetFile = fileUrl || chapterConfig.latest_file;
+    if (el.editionSelect) {
+      el.editionSelect.value = targetFile;
+    }
 
     try {
       const resp = await fetch(targetFile);
@@ -455,14 +478,14 @@
           <img class="yt-thumb-img" src="${thumbUrl}" alt="${escapeHtml(title)}" loading="lazy" onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/${escapeHtml(id)}/hqdefault.jpg';" />
           <div class="yt-thumb-gradient"></div>
           <div class="yt-play-btn" aria-hidden="true">
-            <svg width="22" height="22" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            <svg width="15" height="15" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
           </div>
           <div class="yt-video-badge-bar">
             <span class="yt-pill-tag">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="#ff0000"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-              YouTube Intelligence
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="#ff0000"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+              YouTube
             </span>
-            <span class="yt-pill-tag yt-pill-action">Play Inline ↗</span>
+            <span class="yt-pill-tag yt-pill-action">Play ↗</span>
           </div>
         </div>
       </div>
@@ -557,13 +580,50 @@
 
     const hasExtraDetails = ledgerHtml || bulletsHtml;
 
+    // Video-specific layout with compact side-by-side thumbnail
+    if (ytEmbedHtml) {
+      const channel = details['Channel']?.text || details['Show / Channel']?.text || '';
+      const summaryText = sub.summary 
+        || details['What You Will Learn']?.text 
+        || details['Summary']?.text 
+        || details['Executive Breakdown']?.text 
+        || '';
+
+      return `
+        <article class="intel-item video-intel-card">
+          <div class="item-top-row">
+            <h3 class="item-title">${titleHtml}</h3>
+            <div>${badgeHtml}</div>
+          </div>
+          <div class="video-item-row">
+            ${ytEmbedHtml}
+            <div class="video-item-body">
+              ${channel ? `<div class="item-summary" style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--accent-base); font-weight: 600;">📺 ${escapeHtml(channel)}</div>` : ''}
+              ${summaryText ? `<div class="item-summary">${formatInlineLinks(summaryText)}</div>` : ''}
+              ${hasExtraDetails ? `
+                <button class="deep-dive-toggle" type="button" aria-expanded="false" style="margin-top: 0.25rem;">
+                  <span class="deep-dive-label">Expand Technical Breakdown</span>
+                  <svg class="deep-dive-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </button>
+              ` : ''}
+            </div>
+          </div>
+          ${hasExtraDetails ? `
+            <div class="deep-dive-drawer">
+              ${ledgerHtml}
+              ${bulletsHtml}
+            </div>
+          ` : ''}
+        </article>
+      `;
+    }
+
     return `
       <article class="intel-item">
         <div class="item-top-row">
           <h3 class="item-title">${titleHtml}</h3>
           <div>${badgeHtml}</div>
         </div>
-        ${ytEmbedHtml}
         ${sub.summary ? `<div class="item-summary">${formatInlineLinks(sub.summary)}</div>` : ''}
         ${hasExtraDetails ? `
           <button class="deep-dive-toggle" type="button" aria-expanded="false">
