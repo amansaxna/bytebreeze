@@ -112,7 +112,7 @@ body.cyber-mode {
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 7.25rem;
+  scroll-padding-top: 6.25rem;
   font-size: 16px;
   overflow-x: clip;
 }
@@ -170,7 +170,7 @@ header.site-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 3.6rem;
+  height: 3.2rem;
   gap: 1.25rem;
 }
 
@@ -361,13 +361,13 @@ header.site-header {
 /* Sticky Subnav Bar (Scrollspy Anchor Dock + Inline Search) */
 .sticky-subnav-bar {
   position: sticky;
-  top: 3.6rem;
+  top: 3.2rem;
   z-index: 90;
   background-color: var(--bg-subnav);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--border-subtle);
-  padding: 0.35rem 0;
+  padding: 0.25rem 0;
   transition: background-color var(--transition-fast);
 }
 
@@ -479,7 +479,7 @@ header.site-header {
 
 /* Hero Section */
 .hero-hub {
-  padding: 2.75rem 0 2rem;
+  padding: 1.5rem 0 1.25rem;
   border-bottom: 1px solid var(--border-dim);
   position: relative;
 }
@@ -497,70 +497,21 @@ header.site-header {
   transition: background 0.4s ease;
 }
 
-.hero-header-row {
-  display: flex;
-  align-items: center;
-  gap: 0.65rem;
-  margin-bottom: 0.85rem;
-  flex-wrap: wrap;
-}
-
-.meta-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  padding: 0.25rem 0.65rem;
-  border-radius: var(--radius-full);
-  border: 1px solid var(--border-subtle);
-  background: var(--bg-secondary);
-  color: var(--text-muted);
-}
-
-.meta-chip-live {
-  background: var(--status-emerald-bg);
-  color: var(--status-emerald);
-  border-color: rgba(16, 185, 129, 0.35);
-}
-
-.meta-chip-readtime {
-  background: var(--accent-bg-subtle);
-  color: var(--accent-base);
-  border-color: var(--accent-border);
-}
-
-.pulse-node {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background-color: currentColor;
-  box-shadow: 0 0 8px currentColor;
-  animation: pulse-ring 2.2s infinite ease-in-out;
-}
-
-@keyframes pulse-ring {
-  0%, 100% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(0.75); opacity: 0.4; }
-}
-
 .hero-headline {
-  font-size: 2.25rem;
-  font-weight: 800;
-  letter-spacing: -0.035em;
-  line-height: 1.18;
-  margin-bottom: 0.65rem;
+  font-size: 1.45rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  margin-bottom: 0.4rem;
   color: var(--text-primary);
 }
 
 .hero-subtitle {
-  font-size: 1.05rem;
+  font-size: 0.88rem;
   color: var(--text-muted);
-  max-width: 780px;
-  line-height: 1.6;
-  margin-bottom: 2rem;
+  max-width: 720px;
+  line-height: 1.55;
+  margin-bottom: 1.5rem;
 }
 
 /* Priority Sprint Banner - Asymmetric Hero Spotlight */
@@ -778,9 +729,9 @@ header.site-header {
 }
 
 .section-heading {
-  font-size: 1.45rem;
-  font-weight: 800;
-  letter-spacing: -0.025em;
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: -0.015em;
   color: var(--text-primary);
 }
 
@@ -795,10 +746,10 @@ header.site-header {
   background: var(--bg-card);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
-  padding: 1.75rem;
+  padding: 1.5rem;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0.85rem;
   position: relative;
   transition: border-color var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
 }
@@ -817,10 +768,30 @@ header.site-header {
 }
 
 .item-title {
-  font-size: 1.2rem;
+  font-size: 1.05rem;
   font-weight: 700;
   line-height: 1.35;
   letter-spacing: -0.015em;
+}
+
+/* YouTube Technical Breakdown Direct Box */
+.video-technical-breakdown {
+  margin-top: 0.5rem;
+  display: grid;
+  gap: 0.5rem;
+  animation: fadeIn 220ms ease;
+}
+
+.breakdown-header-label {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent-base);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
 }
 
 .item-title a {

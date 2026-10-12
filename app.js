@@ -185,7 +185,7 @@
             isManualScrolling = true;
             clearTimeout(scrollTimeout);
 
-            const headerOffset = 115;
+            const headerOffset = 100;
             const targetTop = targetEl.getBoundingClientRect().top + window.pageYOffset - headerOffset;
             window.scrollTo({
               top: Math.max(0, targetTop),
@@ -315,9 +315,9 @@
     updateChapterStyles();
 
     // Hero Meta
-    el.heroTitle.textContent = meta.edition_title || 'Daily Technical Intelligence';
-    el.badgeDate.textContent = meta.date || 'Today';
-    el.badgeAudience.textContent = meta.target_audience || 'Systems Engineers';
+    if (el.heroTitle) el.heroTitle.textContent = meta.edition_title || 'Daily Technical Intelligence';
+    if (el.badgeDate) el.badgeDate.textContent = meta.date || 'Today';
+    if (el.badgeAudience) el.badgeAudience.textContent = meta.target_audience || 'Systems Engineers';
 
     // Calculate dynamic reading time
     const rawWordCount = JSON.stringify(data).split(/\s+/).length;
@@ -551,12 +551,18 @@
             let valText = typeof item === 'object' ? item.text : item;
             let linksHtml = '';
             if (item && item.links && item.links.length > 0) {
-              linksHtml = ' ' + item.links.map(l => `<a href="${escapeHtml(l.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(l.name || 'Canonical Link')} ↗</a>`).join(' · ');
+              linksHtml = ' ' + item.links.map(l => {
+                if (valText && l.name && valText.trim().toLowerCase() === l.name.trim().toLowerCase()) {
+                  valText = '';
+                }
+                return `<a href="${escapeHtml(l.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(l.name || 'Canonical Link')} ↗</a>`;
+              }).join(' · ');
             }
+            const cleanVal = valText ? escapeHtml(valText) : '';
             return `
               <div class="ledger-entry">
                 <span class="ledger-key">${escapeHtml(k)}</span>
-                <span class="ledger-val">${escapeHtml(valText)}${linksHtml}</span>
+                <span class="ledger-val">${cleanVal}${linksHtml}</span>
               </div>
             `;
           }).join('')}
@@ -580,7 +586,7 @@
 
     const hasExtraDetails = ledgerHtml || bulletsHtml;
 
-    // Video-specific layout with compact side-by-side thumbnail
+    // Video-specific layout with compact side-by-side thumbnail & direct technical breakdown
     if (ytEmbedHtml) {
       const channel = details['Channel']?.text || details['Show / Channel']?.text || '';
       const summaryText = sub.summary 
@@ -600,16 +606,14 @@
             <div class="video-item-body">
               ${channel ? `<div class="item-summary" style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--accent-base); font-weight: 600;">📺 ${escapeHtml(channel)}</div>` : ''}
               ${summaryText ? `<div class="item-summary">${formatInlineLinks(summaryText)}</div>` : ''}
-              ${hasExtraDetails ? `
-                <button class="deep-dive-toggle" type="button" aria-expanded="false" style="margin-top: 0.25rem;">
-                  <span class="deep-dive-label">Expand Technical Breakdown</span>
-                  <svg class="deep-dive-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                </button>
-              ` : ''}
             </div>
           </div>
           ${hasExtraDetails ? `
-            <div class="deep-dive-drawer">
+            <div class="video-technical-breakdown">
+              <div class="breakdown-header-label">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                Technical Breakdown & Analysis
+              </div>
               ${ledgerHtml}
               ${bulletsHtml}
             </div>

@@ -114,19 +114,6 @@ def render_index_html():
   <main class="container">
     <section class="hero-hub">
       <div class="hero-ambient-glow" aria-hidden="true"></div>
-      
-      <div class="hero-header-row">
-        <span class="meta-chip meta-chip-live">
-          <span class="pulse-node"></span>
-          PIPELINE SYNCED
-        </span>
-        <span id="badge-date" class="meta-chip">Loading...</span>
-        <span id="badge-readtime" class="meta-chip meta-chip-readtime">
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"></polyline></svg>
-          <span id="readtime-val">6 MIN READ</span>
-        </span>
-        <span id="badge-audience" class="meta-chip">Systems Engineers</span>
-      </div>
 
       <h1 id="hero-title" class="hero-headline">Daily Technical Intelligence</h1>
       <p id="hero-desc" class="hero-subtitle">
