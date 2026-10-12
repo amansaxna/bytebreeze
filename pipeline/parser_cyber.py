@@ -103,6 +103,8 @@ def _build_cyber_edition(raw_title: str, date_str: str, nodes: list) -> Dict[str
                             curr_sub["primary_sources"].extend(links)
                         if not curr_sub["summary"] and key.lower() in ["impact vector", "engineering takeaways", "the core threat model", "strategic impact"]:
                             curr_sub["summary"] = val
+                        if not curr_sub.get("url") and links:
+                            curr_sub["url"] = links[0]["url"]
                     else:
                         curr_sub["bullets"].append({
                             "text": li_text,

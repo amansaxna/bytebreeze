@@ -99,10 +99,12 @@ def _build_ai_edition(raw_title: str, date_str: str, nodes: list, edition_index:
                 # Check if this is a subtopic title vs subtopic field
                 # Typically subtopics start with paper/tool title, or have Authors/Summary/What it does
                 has_field_prefix = any(li_text.lower().startswith(p) for p in [
-                    "authors", "release date", "summary:", "why it matters:", "practical takeaway:", 
-                    "key concept", "what it does:", "why it matters", "experimentation idea:", "channel:", 
-                    "signal:", "platform:", "simple explanation", "mental model", "mechanics", "architecture", 
-                    "production", "priority focus", "why:"
+                    "authors", "release date", "summary", "why it matters", "practical takeaway", 
+                    "key concept", "what it does", "technical significance", "practical experiment", 
+                    "experimentation idea", "channel", "signal", "platform", "simple explanation", 
+                    "mental model", "mechanics", "architecture", "production", "priority focus", 
+                    "why", "direct link", "what you will learn", "why it is worth watching",
+                    "target audience", "executive breakdown", "host", "show"
                 ])
 
                 if not has_field_prefix and (len(a_tags) > 0 or len(li_text) < 140) and curr_topic["topic_id"] in ["research-papers", "tools-and-repositories", "video-breakdowns", "technical-discussions"]:
@@ -140,6 +142,8 @@ def _build_ai_edition(raw_title: str, date_str: str, nodes: list, edition_index:
                         }
                         if key.lower() == "summary":
                             curr_sub["summary"] = val
+                        if not curr_sub.get("primary_url") and links:
+                            curr_sub["primary_url"] = links[0]["url"]
                     else:
                         if "bullets" not in curr_sub["details"]:
                             curr_sub["details"]["bullets"] = []

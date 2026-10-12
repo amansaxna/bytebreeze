@@ -42,35 +42,30 @@
 - **Simon Willison (Web / X)**: Independent researcher and creator of Datasette; essential follow for pragmatic software engineering perspectives on LLM security, prompt injection defenses, and CLI AI utilities. ([Web](https://simonwillison.net), [X](https://x.com/simonw))
 
 ## 3. 🔥 High-Engagement AI Discussions & Posts
-### Topic: The Infrastructure Shift from Chatbots to Agent Platforms
+### [Topic: The Infrastructure Shift from Chatbots to Agent Platforms](https://www.coddykit.com/pages/blog-detail?id=5129966&slug=the-future-of-ai-agents-what-october-2026-s-github-trends-reveal-about-2027)
 - **Platform**: Hacker News, GitHub & CoddyKit Technical Analysis ([CoddyKit Technical Analysis](https://www.coddykit.com/pages/blog-detail?id=5129966&slug=the-future-of-ai-agents-what-october-2026-s-github-trends-reveal-about-2027))
 - **Summary**: Engineering communities are analyzing why GitHub Trending in October 2026 is dominated not by coding chatbot wrappers, but by infrastructure projects: persistent context managers, unified web perception gateways (agent-reach), and declarative skills frameworks.
 - **Why it Matters**: Validates that for software engineers moving into AI, success is 80% traditional software systems engineering (process isolation, headless browsers, retries, schemas, caching) and 20% prompt design.
+- **Direct Link**: GitHub Trending Agent Analysis ([GitHub Trending Agent Analysis](https://www.coddykit.com/pages/blog-detail?id=5129966&slug=the-future-of-ai-agents-what-october-2026-s-github-trends-reveal-about-2027))
 
-### [Direct Link: GitHub Trending Agent Analysis](https://www.coddykit.com/pages/blog-detail?id=5129966&slug=the-future-of-ai-agents-what-october-2026-s-github-trends-reveal-about-2027)
-
-### Topic: Detector Half-Life and the Failure of Static AI Checkers
+### [Topic: Detector Half-Life and the Failure of Static AI Checkers](https://arxiv.org/abs/2610.01664)
 - **Platform**: Reddit (r/MachineLearning) & Twitter/X
 - **Summary**: Engineers are discussing the findings of arXiv:2610.01664, noting that building static classifiers to detect AI-generated code or text is mathematically prone to high false-positive bias as models evolve, necessitating dynamic LLM-as-a-judge approaches with balanced macro-F1 baselines. ([arXiv:2610.01664](https://arxiv.org/abs/2610.01664))
-
-### [Direct Link: Obsolescence in Code Detection on arXiv](https://arxiv.org/abs/2610.01664)
+- **Direct Link**: Obsolescence in Code Detection on arXiv ([Obsolescence in Code Detection on arXiv](https://arxiv.org/abs/2610.01664))
 
 ## 4. ▶️ Best AI YouTube Videos
 ### [My OpenCode Multi-Agent Workflow (Local AI Coding in 2026)](https://www.youtube.com/watch?v=kE6x7xKy4lM)
 - **Channel**: OpenCode Engineering Series
 - **Signal**: High practical utility for software engineers
-
-### [Direct Link: Watch on YouTube](https://www.youtube.com/watch?v=kE6x7xKy4lM)
+- **Direct Link**: Watch on YouTube ([Watch on YouTube](https://www.youtube.com/watch?v=kE6x7xKy4lM))
 - **What You Will Learn**: How to build a modular local coding workflow: a planner that scopes the task, a debater that critiques the plan, an implementer that writes code, and dedicated reviewer/linter/test agents operating over a shared state file.
 - **Why It Is Worth Watching**: Demonstrates how to enforce least-privilege file permissions and deterministic test gates in agentic coding workflows.
 
 ### [Pushing the Limits of KV Cache Compression (2026)](https://www.youtube.com/watch?v=jwRwHBlbRsk)
 - **Channel**: AI Paper Slop / Systems Review
 - **Signal**: Detailed systems-level analysis
-
-### [Direct Link: Watch on YouTube](https://www.youtube.com/watch?v=jwRwHBlbRsk)
-
-### What You Will Learn: Deep dive into token eviction, approximate replay, and latent cache compression in long-context models.
+- **Direct Link**: Watch on YouTube ([Watch on YouTube](https://www.youtube.com/watch?v=jwRwHBlbRsk))
+- **What You Will Learn**: Deep dive into token eviction, approximate replay, and latent cache compression in long-context models.
 
 ## 5. 🚀 New Tools, Models & Open-Source Projects
 ### [Agent-Reach](https://github.com/Panniantong/agent-reach)
@@ -82,8 +77,7 @@
 ### [RAM-Net Reference Architecture](https://arxiv.org/abs/2610.11214)
 - **What It Does**: Reference implementation for bridging KV cache quantization and linear recurrent attention.
 - **Why It Matters**: Provides the mathematical formulation and training scripts for migrating Transformer weights to sub-quadratic recurrent attention.
-
-### Technical Significance: Implements soft address assignment kernels over discrete memory slots in PyTorch.
+- **Technical Significance**: Implements soft address assignment kernels over discrete memory slots in PyTorch.
 - **Practical Experiment**: Review the memory scaling benchmark comparing RAM-Net's constant memory footprint against vanilla Transformer KV cache growth as sequence length scales from 1K to 32K tokens.
 
 ## 6. 📚 Concept of the Day: Decoupled Agent Perception Gateways

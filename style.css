@@ -109,6 +109,7 @@ html {
   scroll-behavior: smooth;
   scroll-padding-top: 8.5rem;
   font-size: 16px;
+  overflow-x: clip;
 }
 
 body {
@@ -120,7 +121,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   min-height: 100vh;
   position: relative;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 /* Blueprint Subtle Dot Matrix Canvas */
@@ -1062,6 +1063,129 @@ header.site-header {
   color: var(--accent-base);
   text-decoration: none;
   font-weight: 600;
+}
+
+/* YouTube Intelligence Video Preview Card */
+.yt-preview-box {
+  margin: 0.85rem 0 0.5rem 0;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  border: 1px solid var(--border-medium);
+  background: #000000;
+  position: relative;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+.yt-thumb-frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  cursor: pointer;
+  overflow: hidden;
+  background-color: #050608;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  outline: none;
+}
+
+.yt-thumb-frame:focus-visible {
+  box-shadow: 0 0 0 2px var(--accent-base);
+}
+
+.yt-thumb-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform var(--transition-smooth), opacity var(--transition-smooth);
+}
+
+.yt-thumb-frame:hover .yt-thumb-img {
+  transform: scale(1.025);
+  opacity: 0.92;
+}
+
+.yt-thumb-gradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.6) 100%);
+  pointer-events: none;
+}
+
+.yt-play-btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1.5px solid rgba(255, 255, 255, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  transition: all var(--transition-bounce);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55);
+  z-index: 2;
+}
+
+.yt-thumb-frame:hover .yt-play-btn {
+  transform: translate(-50%, -50%) scale(1.1);
+  background: #ff0000;
+  border-color: #ff4d4d;
+  box-shadow: 0 10px 30px rgba(255, 0, 0, 0.5);
+}
+
+.yt-play-btn svg {
+  margin-left: 2px;
+  fill: currentColor;
+}
+
+.yt-video-badge-bar {
+  position: absolute;
+  bottom: 0.65rem;
+  left: 0.65rem;
+  right: 0.65rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.yt-pill-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(0, 0, 0, 0.78);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 0.22rem 0.55rem;
+  border-radius: var(--radius-xs);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #f8fafc;
+  letter-spacing: 0.02em;
+}
+
+.yt-pill-action {
+  background: rgba(255, 0, 0, 0.85);
+  border-color: rgba(255, 100, 100, 0.4);
+}
+
+.yt-iframe-embed {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: none;
+  display: block;
+  background: #000;
 }
 
 /* Toast Notice */

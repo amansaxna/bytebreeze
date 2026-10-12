@@ -12,6 +12,9 @@
     activeTopicId: null
   };
 
+  let isManualScrolling = false;
+  let scrollTimeout = null;
+
   // DOM Elements
   const el = {
     brand: document.querySelector('.brand'),
@@ -135,6 +138,51 @@
           item.classList.toggle('expanded');
           const isExp = item.classList.contains('expanded');
           toggle.querySelector('.deep-dive-label').textContent = isExp ? 'Collapse Technical Breakdown' : 'Expand Technical Breakdown';
+        }
+      }
+    });
+
+    // Keyboard trigger for accessible video cards
+    el.contentArea.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        const frame = e.target.closest('.yt-thumb-frame');
+        if (frame) {
+          e.preventDefault();
+          frame.click();
+        }
+      }
+    });
+
+    // Smooth anchor navigation click listener with precise header offset
+    document.addEventListener('click', (e) => {
+      const anchor = e.target.closest('a[href^="#"]');
+      if (anchor) {
+        const href = anchor.getAttribute('href');
+        if (href && href.length > 1) {
+          const targetEl = document.querySelector(href);
+          if (targetEl) {
+            e.preventDefault();
+            isManualScrolling = true;
+            clearTimeout(scrollTimeout);
+
+            const headerOffset = 135;
+            const targetTop = targetEl.getBoundingClientRect().top + window.pageYOffset - headerOffset;
+            window.scrollTo({
+              top: Math.max(0, targetTop),
+              behavior: 'smooth'
+            });
+
+            const pill = anchor.closest('.dock-pill');
+            if (pill) {
+              document.querySelectorAll('.dock-pill').forEach(p => p.classList.remove('active'));
+              pill.classList.add('active');
+              scrollPillIntoView(pill);
+            }
+
+            scrollTimeout = setTimeout(() => {
+              isManualScrolling = false;
+            }, 750);
+          }
         }
       }
     });
@@ -363,7 +411,77 @@
     }
 
     el.contentArea.innerHTML = html;
+    setupScrollSpy();
   }
+
+  // YouTube Intelligence Video Extraction & Embed
+  function extractYouTubeVideoId(url) {
+    if (!url || typeof url !== 'string') return null;
+    const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})(?:[^\w-]|$)/);
+    return match ? match[1] : null;
+  }
+
+  function findYouTubeInfo(sub) {
+    let ytId = extractYouTubeVideoId(sub.primary_url || sub.url);
+    if (ytId) return { id: ytId, url: sub.primary_url || sub.url };
+
+    if (sub.details) {
+      for (const key of Object.keys(sub.details)) {
+        const item = sub.details[key];
+        if (item && Array.isArray(item.links)) {
+          for (const l of item.links) {
+            ytId = extractYouTubeVideoId(l.url);
+            if (ytId) return { id: ytId, url: l.url };
+          }
+        }
+        const textVal = typeof item === 'object' ? item.text : item;
+        if (typeof textVal === 'string') {
+          ytId = extractYouTubeVideoId(textVal);
+          if (ytId) return { id: ytId, url: textVal };
+        }
+      }
+    }
+    return null;
+  }
+
+  function renderYouTubeEmbed(ytInfo, title) {
+    if (!ytInfo || !ytInfo.id) return '';
+    const id = ytInfo.id;
+    const thumbUrl = `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
+    
+    return `
+      <div class="yt-preview-box" data-video-id="${escapeHtml(id)}">
+        <div class="yt-thumb-frame" role="button" tabindex="0" aria-label="Play video: ${escapeHtml(title)}" onclick="window.loadYouTubeIframe && window.loadYouTubeIframe(this, '${escapeHtml(id)}')">
+          <img class="yt-thumb-img" src="${thumbUrl}" alt="${escapeHtml(title)}" loading="lazy" onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/${escapeHtml(id)}/hqdefault.jpg';" />
+          <div class="yt-thumb-gradient"></div>
+          <div class="yt-play-btn" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+          <div class="yt-video-badge-bar">
+            <span class="yt-pill-tag">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="#ff0000"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+              YouTube Intelligence
+            </span>
+            <span class="yt-pill-tag yt-pill-action">Play Inline ↗</span>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  window.loadYouTubeIframe = function(frameEl, videoId) {
+    const box = frameEl.closest('.yt-preview-box');
+    if (!box) return;
+    box.innerHTML = `
+      <iframe 
+        class="yt-iframe-embed" 
+        src="https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0" 
+        title="YouTube video player" 
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+        allowfullscreen
+      ></iframe>
+    `;
+  };
 
   function renderSubtopicCard(sub, topicId) {
     // 1. Concept of the Day (3-Tier View)
@@ -375,6 +493,10 @@
     if (topicId === 'actionable-learning-plan' || sub.details['0–20 min']) {
       return renderActionPlanCard(sub);
     }
+
+    // YouTube Video Embedding
+    const ytInfo = findYouTubeInfo(sub);
+    const ytEmbedHtml = ytInfo ? renderYouTubeEmbed(ytInfo, sub.title) : '';
 
     const titleLink = sub.url || sub.primary_url;
     const titleHtml = titleLink
@@ -441,6 +563,7 @@
           <h3 class="item-title">${titleHtml}</h3>
           <div>${badgeHtml}</div>
         </div>
+        ${ytEmbedHtml}
         ${sub.summary ? `<div class="item-summary">${formatInlineLinks(sub.summary)}</div>` : ''}
         ${hasExtraDetails ? `
           <button class="deep-dive-toggle" type="button" aria-expanded="false">
@@ -515,19 +638,36 @@
     `;
   }
 
-  // ScrollSpy with IntersectionObserver
+  function scrollPillIntoView(pill) {
+    if (!el.pillarNav || !pill) return;
+    const pillLeft = pill.offsetLeft;
+    const pillWidth = pill.offsetWidth;
+    const dockWidth = el.pillarNav.clientWidth;
+    const targetScroll = pillLeft - (dockWidth / 2) + (pillWidth / 2);
+    el.pillarNav.scrollTo({
+      left: Math.max(0, targetScroll),
+      behavior: 'smooth'
+    });
+  }
+
+  // ScrollSpy with IntersectionObserver (isolated to pill dock)
   function setupScrollSpy() {
     const sections = document.querySelectorAll('.intel-section');
     if (!sections.length) return;
 
+    if (window._sectionObserver) {
+      window._sectionObserver.disconnect();
+    }
+
     const observer = new IntersectionObserver((entries) => {
+      if (isManualScrolling) return;
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           const id = entry.target.id;
           document.querySelectorAll('.dock-pill').forEach(pill => {
             if (pill.getAttribute('data-target') === id) {
               pill.classList.add('active');
-              pill.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+              scrollPillIntoView(pill);
             } else {
               pill.classList.remove('active');
             }
@@ -535,10 +675,11 @@
         }
       });
     }, {
-      rootMargin: '-20% 0px -65% 0px'
+      rootMargin: '-15% 0px -70% 0px'
     });
 
     sections.forEach(sec => observer.observe(sec));
+    window._sectionObserver = observer;
   }
 
   function showToast(msg) {
