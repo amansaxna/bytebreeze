@@ -175,14 +175,14 @@ def _build_ai_edition(raw_title: str, date_str: str, nodes: list, edition_index:
 
 def _map_ai_topic_id(text: str) -> str:
     t = text.lower()
-    if "research" in t or "paper" in t: return "research-papers"
-    if "practitioner" in t or "follow" in t or "educator" in t or "engineer" in t: return "practitioners"
-    if "discussion" in t or "debate" in t: return "technical-discussions"
-    if "video" in t or "youtube" in t: return "video-breakdowns"
-    if "tool" in t or "repositor" in t or "model" in t: return "tools-and-repositories"
-    if "concept of the day" in t: return "concept-of-the-day"
-    if "action plan" in t or "learn today" in t or "60" in t: return "actionable-learning-plan"
-    if "career" in t or "relevance" in t: return "career-relevance"
+    if "2." in t or "practitioner" in t or "educator" in t or "follow" in t or "voices" in t: return "practitioners"
+    if "1." in t or "paper" in t or "breakthrough" in t or "research" in t: return "research-papers"
+    if "3." in t or "discussion" in t or "debate" in t: return "technical-discussions"
+    if "4." in t or "video" in t or "youtube" in t: return "video-breakdowns"
+    if "5." in t or "tool" in t or "repositor" in t or "open-source" in t or "framework" in t: return "tools-and-repositories"
+    if "6." in t or "concept of the day" in t: return "concept-of-the-day"
+    if "7." in t or "action plan" in t or "learn today" in t or "60" in t: return "actionable-learning-plan"
+    if "8." in t or "career" in t or "relevance" in t or "domain" in t: return "career-relevance"
     return re.sub(r'[^a-zA-Z0-9]+', '-', t).strip('-')
 
 def _map_ai_icon(topic_id: str) -> str:

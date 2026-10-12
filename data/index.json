@@ -1,13 +1,20 @@
 {
-  "generated_at": "2026-10-11T18:07:10.621150+00:00",
+  "generated_at": "2026-10-12T04:09:01.451106+00:00",
   "chapters": {
     "ai": {
       "name": "AI Engineering Digest",
       "tagline": "High-signal daily intelligence for software engineers leveling up in AI/ML systems",
       "icon": "🤖",
-      "latest_date": "October 11, 2026",
+      "latest_date": "October 12, 2026",
       "latest_file": "data/ai/latest.json",
       "editions": [
+        {
+          "id": "october-12--2026",
+          "title": "🤖 Daily AI Engineering Digest — October 12, 2026",
+          "date": "October 12, 2026",
+          "topics_count": 8,
+          "file": "data/ai/editions/october-12--2026.json"
+        },
         {
           "id": "october-11--2026",
           "title": "🤖 Daily AI Engineering Digest — October 11, 2026",

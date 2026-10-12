@@ -3,7 +3,7 @@
   "metadata": {
     "date": "October 11, 2026",
     "edition_title": "🤖 Daily AI Engineering Digest — October 11, 2026",
-    "edition_number": 2,
+    "edition_number": 3,
     "target_audience": "Software Engineers Transitioning to AI/ML Systems",
     "quick_takeaway_5_min": [
       "Expanding Reasoning Limits: New arXiv research investigates test-time compute scaling and recursive self-improving agents, showing how dynamic search graphs outperform raw token generation during complex multi-step reasoning.",

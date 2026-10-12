@@ -1,4 +1,4 @@
-// ByteBreeze Frontend Application Controller
+// ByteBreeze Frontend Application Controller — Anti-Slop High-Signal Engine
 (function() {
   'use strict';
 
@@ -40,27 +40,28 @@
     readUrlParams();
     setupEventListeners();
 
-    // Load initial embedded data if available, then fetch latest
+    // 1. Load initial embedded data if present
     try {
       const embedded = document.getElementById('initial-index-data');
       if (embedded && embedded.textContent.trim()) {
         state.indexData = JSON.parse(embedded.textContent);
       }
     } catch (e) {
-      console.warn('No embedded index found, fetching...');
+      console.warn('Initial embedded index parse fallback:', e);
     }
 
+    // 2. Fetch live data/index.json if available
     try {
       const resp = await fetch('data/index.json');
       if (resp.ok) {
         state.indexData = await resp.json();
       }
     } catch (e) {
-      console.log('Using local fallback or embedded state', e);
+      console.log('Serving from embedded index state:', e);
     }
 
     if (!state.indexData) {
-      console.error('Failed to load ByteBreeze index.');
+      console.error('Failed to load ByteBreeze index catalog.');
       return;
     }
 
@@ -103,7 +104,7 @@
     el.btnCopyMd.addEventListener('click', () => {
       if (!state.currentEditionData || !state.currentEditionData.markdown) return;
       navigator.clipboard.writeText(state.currentEditionData.markdown).then(() => {
-        showToast('Semantic Markdown copied to clipboard!');
+        showToast('Semantic Markdown copied to clipboard');
       });
     });
 
@@ -111,7 +112,7 @@
       if (!state.currentEditionData) return;
       const jsonStr = JSON.stringify(state.currentEditionData, null, 2);
       navigator.clipboard.writeText(jsonStr).then(() => {
-        showToast('Machine-readable JSON copied to clipboard!');
+        showToast('Machine-readable JSON copied to clipboard');
       });
     });
 
@@ -124,7 +125,9 @@
 
   function applyTheme(theme) {
     document.documentElement.setAttribute('data-theme', theme);
-    el.btnTheme.textContent = theme === 'dark' ? '☀️' : '🌙';
+    el.btnTheme.innerHTML = theme === 'dark' 
+      ? `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>` 
+      : `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`;
   }
 
   function switchChapter(chap) {
@@ -138,13 +141,11 @@
   function updateChapterStyles() {
     if (state.chapter === 'cyber') {
       document.body.classList.add('cyber-mode');
-      el.brand.classList.add('cyber-active');
       el.tabCyber.classList.add('active');
       el.tabAi.classList.remove('active');
       el.heroDesc.textContent = state.indexData.chapters.cyber.tagline;
     } else {
       document.body.classList.remove('cyber-mode');
-      el.brand.classList.remove('cyber-active');
       el.tabAi.classList.add('active');
       el.tabCyber.classList.remove('active');
       el.heroDesc.textContent = state.indexData.chapters.ai.tagline;
@@ -175,7 +176,7 @@
         throw new Error(`Failed to load ${targetFile}`);
       }
     } catch (e) {
-      console.warn('Fetch failed, checking embedded fallback...', e);
+      console.warn('Network fetch unavailable, using embedded fallback state:', e);
       const fallbackId = `initial-${state.chapter}-latest`;
       const fallbackEl = document.getElementById(fallbackId);
       if (fallbackEl) {
@@ -194,10 +195,10 @@
 
     updateChapterStyles();
 
-    // Hero metadata
+    // Hero Meta
     el.heroTitle.textContent = meta.edition_title || 'Daily Technical Intelligence';
     el.badgeDate.textContent = meta.date || 'Today';
-    el.badgeAudience.textContent = meta.target_audience || 'Engineering Teams';
+    el.badgeAudience.textContent = meta.target_audience || 'Systems Engineers';
 
     if (state.indexData.generated_at) {
       const d = new Date(state.indexData.generated_at);
@@ -206,33 +207,42 @@
       });
     }
 
-    // 30-Min Priority Sprint Banner
+    // 30-Minute Priority Sprint Card
     const sprint = meta.high_leverage_30_min_pick;
     if (sprint && sprint.title) {
-      el.prioritySprint.style.display = 'flex';
-      const urlHtml = sprint.url 
-        ? `<a href="${escapeHtml(sprint.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(sprint.title)} ↗</a>` 
-        : escapeHtml(sprint.title);
+      el.prioritySprint.style.display = 'grid';
+      const cleanUrl = sprint.url || '#';
       el.prioritySprint.innerHTML = `
-        <div class="priority-icon">⭐</div>
-        <div class="priority-content">
-          <div class="priority-label">30-Minute Priority Sprint</div>
-          <div class="priority-title">${urlHtml}</div>
-          <div class="priority-rationale">${escapeHtml(sprint.rationale || '')}</div>
+        <div class="sprint-badge-cell">
+          <div class="sprint-time">30</div>
+          <div class="sprint-unit">Min</div>
         </div>
+        <div class="sprint-content">
+          <div class="sprint-eyebrow">Priority High-Leverage Sprint</div>
+          <div class="sprint-title">${escapeHtml(sprint.title)}</div>
+          <div class="sprint-rationale">${escapeHtml(sprint.rationale || '')}</div>
+        </div>
+        ${sprint.url ? `
+          <div>
+            <a href="${escapeHtml(cleanUrl)}" target="_blank" rel="noopener noreferrer" class="sprint-action-btn">
+              Direct Primary Link
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg>
+            </a>
+          </div>
+        ` : ''}
       `;
     } else {
       el.prioritySprint.style.display = 'none';
     }
 
-    // 5-Min Executive Briefing
+    // 5-Min Executive Briefing Matrix
     const takeaways = meta.quick_takeaway_5_min || [];
     if (takeaways.length > 0) {
       el.briefingBox.style.display = 'block';
-      el.briefingList.innerHTML = takeaways.map(t => `
-        <li class="briefing-item">
-          <span class="briefing-bullet">›</span>
-          <span>${formatInlineLinks(t)}</span>
+      el.briefingList.innerHTML = takeaways.map((t, i) => `
+        <li class="matrix-card">
+          <span class="matrix-index">0${i + 1}</span>
+          <div class="matrix-text">${formatInlineLinks(t)}</div>
         </li>
       `).join('');
     } else {
@@ -242,17 +252,20 @@
     // Pillar Navigation
     renderPillarNav(data.topics || []);
 
-    // Render topics / cards
+    // Render Topics & Cards
     renderContent();
   }
 
   function renderPillarNav(topics) {
-    el.pillarNav.innerHTML = topics.map(t => `
-      <a href="#${t.topic_id}" class="pillar-pill">
-        <span>${escapeHtml(t.topic_title.split(' ')[0] || '•')}</span>
-        <span>${escapeHtml(t.topic_title.replace(/^[0-9\.\s]+/, ''))}</span>
-      </a>
-    `).join('');
+    el.pillarNav.innerHTML = topics.map(t => {
+      // Clean display label
+      const cleanLabel = t.topic_title.replace(/^[0-9\.\s]+/, '').replace(/^[\uD800-\uDBFF\uDC00-\uDFFF\u2600-\u27BF]+\s*/, '');
+      return `
+        <a href="#${t.topic_id}" class="dock-pill">
+          <span>${escapeHtml(cleanLabel)}</span>
+        </a>
+      `;
+    }).join('');
   }
 
   function renderContent() {
@@ -261,8 +274,7 @@
 
     let html = '';
 
-    topics.forEach(topic => {
-      // Filter subtopics if search active
+    topics.forEach((topic, idx) => {
       const filteredSubs = (topic.subtopics || []).filter(sub => {
         if (!query) return true;
         const text = (sub.title + ' ' + (sub.summary || '') + ' ' + JSON.stringify(sub.details || {})).toLowerCase();
@@ -271,12 +283,17 @@
 
       if (filteredSubs.length === 0 && query) return;
 
+      const cleanHeading = topic.topic_title.replace(/^[0-9\.\s]+/, '').replace(/^[\uD800-\uDBFF\uDC00-\uDFFF\u2600-\u27BF]+\s*/, '');
+
       html += `
-        <section id="${topic.topic_id}" class="section-pillar">
-          <div class="pillar-header">
-            <h2 class="pillar-title">${escapeHtml(topic.topic_title)}</h2>
+        <section id="${topic.topic_id}" class="intel-section">
+          <div class="section-head">
+            <div class="section-head-left">
+              <span class="section-num">0${idx + 1}</span>
+              <h2 class="section-heading">${escapeHtml(cleanHeading)}</h2>
+            </div>
           </div>
-          <div class="cards-grid">
+          <div class="cards-matrix">
             ${filteredSubs.map(sub => renderSubtopicCard(sub, topic.topic_id)).join('')}
           </div>
         </section>
@@ -284,8 +301,8 @@
     });
 
     if (!html && query) {
-      html = `<div style="text-align: center; padding: 4rem 1rem; color: var(--text-muted);">
-        No items matched "<strong>${escapeHtml(query)}</strong>". Try another keyword or clear search.
+      html = `<div style="text-align: center; padding: 5rem 1rem; color: var(--text-muted); font-family: var(--font-mono);">
+        No intelligence records matching "<strong>${escapeHtml(query)}</strong>".
       </div>`;
     }
 
@@ -293,50 +310,52 @@
   }
 
   function renderSubtopicCard(sub, topicId) {
-    // Check if Concept of the Day (3-tier)
+    // 1. Concept of the Day (3-Tier View)
     if (topicId === 'concept-of-the-day' || sub.details['Simple Explanation (Beginner)'] || sub.tier_1_mental_model) {
       return renderConceptCard(sub);
     }
 
-    // Check if 60-90 min Action plan
+    // 2. 60-90 Minute Learning Plan (Phased Timeline)
     if (topicId === 'actionable-learning-plan' || sub.details['0–20 min']) {
       return renderActionPlanCard(sub);
     }
 
-    const titleHtml = sub.url || sub.primary_url
-      ? `<a href="${escapeHtml(sub.url || sub.primary_url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(sub.title)} ↗</a>`
+    const titleLink = sub.url || sub.primary_url;
+    const titleHtml = titleLink
+      ? `<a href="${escapeHtml(titleLink)}" target="_blank" rel="noopener noreferrer">${escapeHtml(sub.title)} <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg></a>`
       : escapeHtml(sub.title);
 
-    let detailsHtml = '';
+    let badgeHtml = '';
     const details = sub.details || {};
 
-    // Special pill for CVSS / Exploit status in cyber
-    let badgeHtml = '';
+    // CVSS Score & Wild Exploitation badges
     if (details['Impact Vector'] && details['Impact Vector'].text.includes('CVSS Score: 10')) {
-      badgeHtml += `<span class="severity-pill sev-critical">CVSS 10.0 CRITICAL</span> `;
+      badgeHtml += `<span class="badge-sev badge-sev-critical">CVSS 10.0 CRITICAL</span> `;
     } else if (details['Impact Vector'] && details['Impact Vector'].text.includes('CVSS')) {
-      badgeHtml += `<span class="severity-pill sev-high">HIGH SEVERITY</span> `;
+      badgeHtml += `<span class="badge-sev badge-sev-high">HIGH SEVERITY</span> `;
     }
 
     if (details['Exploitation Status'] && details['Exploitation Status'].text.toLowerCase().includes('in the wild')) {
-      badgeHtml += `<span class="severity-pill sev-critical" style="margin-left: 0.3rem;">EXPLOITED IN WILD</span>`;
+      badgeHtml += `<span class="badge-sev badge-sev-critical">ACTIVE IN WILD</span>`;
     }
 
+    // Spec ledger (Key-Value)
+    let ledgerHtml = '';
     const detailKeys = Object.keys(details).filter(k => k !== 'bullets');
     if (detailKeys.length > 0) {
-      detailsHtml = `
-        <div class="details-list">
+      ledgerHtml = `
+        <div class="spec-ledger">
           ${detailKeys.map(k => {
             const item = details[k];
             let valText = typeof item === 'object' ? item.text : item;
             let linksHtml = '';
             if (item && item.links && item.links.length > 0) {
-              linksHtml = ' ' + item.links.map(l => `<a href="${escapeHtml(l.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(l.name || 'Source')} ↗</a>`).join(' · ');
+              linksHtml = ' ' + item.links.map(l => `<a href="${escapeHtml(l.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(l.name || 'Canonical Link')} ↗</a>`).join(' · ');
             }
             return `
-              <div class="detail-row">
-                <span class="detail-label">${escapeHtml(k)}</span>
-                <span class="detail-value">${escapeHtml(valText)}${linksHtml}</span>
+              <div class="ledger-entry">
+                <span class="ledger-key">${escapeHtml(k)}</span>
+                <span class="ledger-val">${escapeHtml(valText)}${linksHtml}</span>
               </div>
             `;
           }).join('')}
@@ -344,12 +363,12 @@
       `;
     }
 
-    // Bullets if present
+    // Bullets list
     let bulletsHtml = '';
     const bullets = details.bullets || sub.bullets || [];
     if (bullets.length > 0) {
       bulletsHtml = `
-        <ul style="padding-left: 1.25rem; color: var(--text-muted); font-size: 0.875rem; margin-top: 0.5rem; display: grid; gap: 0.35rem;">
+        <ul class="item-bullets">
           ${bullets.map(b => {
             const bText = typeof b === 'object' ? b.text : b;
             return `<li>${formatInlineLinks(bText)}</li>`;
@@ -359,13 +378,13 @@
     }
 
     return `
-      <article class="intel-card">
-        <div class="card-top">
-          <h3 class="card-title">${titleHtml}</h3>
+      <article class="intel-item">
+        <div class="item-top-row">
+          <h3 class="item-title">${titleHtml}</h3>
           <div>${badgeHtml}</div>
         </div>
-        ${sub.summary ? `<div class="card-summary">${formatInlineLinks(sub.summary)}</div>` : ''}
-        ${detailsHtml}
+        ${sub.summary ? `<div class="item-summary">${formatInlineLinks(sub.summary)}</div>` : ''}
+        ${ledgerHtml}
         ${bulletsHtml}
       </article>
     `;
@@ -378,26 +397,26 @@
     const t3 = details['Production Implementation']?.text || details['Production Pattern']?.text || sub.tier_3_production_pattern || '';
 
     return `
-      <article class="intel-card">
-        <h3 class="card-title">${escapeHtml(sub.title)}</h3>
-        <div class="concept-container">
-          <div class="tier-card tier-1">
-            <div class="tier-header">
-              <span class="tier-tag">Tier 1 • Mental Model</span>
+      <article class="intel-item">
+        <h3 class="item-title">${escapeHtml(sub.title)}</h3>
+        <div class="concept-grid">
+          <div class="concept-tier-card tier-t1">
+            <div class="tier-indicator">
+              <span class="tier-chip">Tier 1 • Mental Model</span>
             </div>
-            <div class="tier-body">${escapeHtml(t1 || 'Intuitive foundation.')}</div>
+            <div class="tier-text">${escapeHtml(t1 || 'Foundational conceptual model.')}</div>
           </div>
-          <div class="tier-card tier-2">
-            <div class="tier-header">
-              <span class="tier-tag">Tier 2 • Systems Architecture</span>
+          <div class="concept-tier-card tier-t2">
+            <div class="tier-indicator">
+              <span class="tier-chip">Tier 2 • Systems Mechanics</span>
             </div>
-            <div class="tier-body">${escapeHtml(t2 || 'Mechanics & technical breakdown.')}</div>
+            <div class="tier-text">${escapeHtml(t2 || 'Internal architecture breakdown.')}</div>
           </div>
-          <div class="tier-card tier-3">
-            <div class="tier-header">
-              <span class="tier-tag">Tier 3 • Production Pattern</span>
+          <div class="concept-tier-card tier-t3">
+            <div class="tier-indicator">
+              <span class="tier-chip">Tier 3 • Production Code Pattern</span>
             </div>
-            <div class="tier-body">${escapeHtml(t3 || 'Tradeoffs & code implementation.')}</div>
+            <div class="tier-text">${escapeHtml(t3 || 'Production tradeoffs and implementation safeguards.')}</div>
           </div>
         </div>
       </article>
@@ -407,19 +426,22 @@
   function renderActionPlanCard(sub) {
     const details = sub.details || {};
     const phases = [
-      { time: '0–20 min', text: details['0–20 min']?.text || 'High-signal reading & video review' },
-      { time: '20–50 min', text: details['20–50 min']?.text || 'Core theoretical mechanics' },
-      { time: '50–90 min', text: details['50–90 min']?.text || 'Hands-on code prototype & local benchmark' }
+      { time: '0–20 min', label: 'Theory / Read', text: details['0–20 min']?.text || 'High-signal reading & canonical paper review' },
+      { time: '20–50 min', label: 'Mechanics', text: details['20–50 min']?.text || 'Core theoretical breakdown and architecture diagram' },
+      { time: '50–90 min', label: 'Hands-On Build', text: details['50–90 min']?.text || 'Code prototype or reproducible local benchmark' }
     ];
 
     return `
-      <article class="intel-card">
-        <h3 class="card-title">${escapeHtml(sub.title || 'Structured 60–90 Min Action Plan')}</h3>
-        <div class="learning-plan-grid" style="margin-top: 0.75rem;">
+      <article class="intel-item">
+        <h3 class="item-title">${escapeHtml(sub.title || 'Structured 60–90 Min Action Plan')}</h3>
+        <div class="action-plan-track">
           ${phases.map(p => `
-            <div class="plan-phase">
-              <div class="plan-time">⏱️ ${escapeHtml(p.time)}</div>
-              <div class="plan-text">${escapeHtml(p.text)}</div>
+            <div class="action-step-card">
+              <div class="action-time-badge">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                ${escapeHtml(p.time)} • ${escapeHtml(p.label)}
+              </div>
+              <div class="action-desc">${formatInlineLinks(p.text)}</div>
             </div>
           `).join('')}
         </div>
@@ -429,10 +451,10 @@
 
   function showToast(msg) {
     el.toast.textContent = msg;
-    el.toast.classList.add('show');
+    el.toast.classList.add('visible');
     setTimeout(() => {
-      el.toast.classList.remove('show');
-    }, 2800);
+      el.toast.classList.remove('visible');
+    }, 2400);
   }
 
   function escapeHtml(str) {
@@ -445,11 +467,10 @@
   function formatInlineLinks(str) {
     if (!str) return '';
     const escaped = escapeHtml(str);
-    // Convert (arXiv:XXXX.XXXX) or URLs to links
     return escaped.replace(/(https?:\/\/[^\s\)]+)/g, '<a href="$1" target="_blank" rel="noopener noreferrer">$1 ↗</a>');
   }
 
-  // Run on DOM ready
+  // Self execute
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
   } else {
